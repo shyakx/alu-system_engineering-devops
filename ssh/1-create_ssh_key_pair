@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#Lets first create the path for the private rsa key to be stored 
+private_key_path=~/.ssh/school
+# Generate the RSA key pair with a passphrase
+ssh-keygen -t rsa -b 4096 -N "betty" -f "$private_key_path"
