@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-# This script if for creating a rsa key pair with specifieed bits number and protected by passphrase betty
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/school
+# The following code is the bash script for creating the rsa keys 
+ssh-keygen -t rsa -b 4096  -f ~/alu-system_engineering-devops/ssh/school
