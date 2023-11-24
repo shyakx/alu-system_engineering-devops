@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# configuring a file 
+Host default
+HostName 54.147.11.18
+User ubuntu
+IdentifyFile ~/.ssh/school
+PasswordAuthentication no 
