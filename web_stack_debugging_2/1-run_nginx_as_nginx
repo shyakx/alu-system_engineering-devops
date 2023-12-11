@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 # a Bash script that configures the container to fit the above requirements
 
+# Update Nginx configuration to run as nginx user
 sed -i 's/user\s*root;/user nginx;/g' /etc/nginx/nginx.conf
-sed -i 's/listen\s*\(.*\)\;$/listen 8080;/g' /etc/nginx/sites-available/defaultservice nginx restart
-# Display Nginx processes and check if it's running as nginx user
-if pgrep -ef | grep -q "[n]ginx: master process"; then
+
+# Ensure Nginx listens on all active IPs on port 8080
+sed -i 's/listen\s*\(.*\)\;$/listen 8080;/g' /etc/nginx/sites-available/default
+
+# Restart Nginx to apply changes
+service nginx restart
+
+# Check if Nginx is running as nginx user
+if pgrep -u nginx nginx &> /dev/null; then
     echo "Nginx is running as nginx user"
 else
     echo "Nginx is not running as nginx user"
@@ -12,9 +19,3 @@ fi
 
 # Check if Nginx is listening on port 8080
 nc -z 0 8080 && echo "Nginx is listening on port 8080" || echo "Nginx is not listening on port 8080"
-
-# Output the process list for further inspection
-ps aux
-
-# Output the Nginx configuration for further inspection
-cat /etc/nginx/nginx.conf
