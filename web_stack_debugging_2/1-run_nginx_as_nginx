@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+sed -i 's/user\s*root;/user nginx;/g' /etc/nginx/nginx.conf
+sed -i 's/listen\s*\(.*\)\;$/listen 8080;/g' /etc/nginx/sites-available/defaultservice nginx restart
+ps auxff | grep ngin[x]
+nc -z 0 8080
