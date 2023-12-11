@@ -3,5 +3,18 @@
 
 sed -i 's/user\s*root;/user nginx;/g' /etc/nginx/nginx.conf
 sed -i 's/listen\s*\(.*\)\;$/listen 8080;/g' /etc/nginx/sites-available/defaultservice nginx restart
-pgrep -f "nginx: master process" && echo "Nginx is running as nginx user"
-nc -z 0 8080 && echo "Nginx is listening on port 8080"
+# Display Nginx processes and check if it's running as nginx user
+if ps -ef | grep -q "[n]ginx: master process"; then
+    echo "Nginx is running as nginx user"
+else
+    echo "Nginx is not running as nginx user"
+fi
+
+# Check if Nginx is listening on port 8080
+nc -z 0 8080 && echo "Nginx is listening on port 8080" || echo "Nginx is not listening on port 8080"
+
+# Output the process list for further inspection
+ps aux
+
+# Output the Nginx configuration for further inspection
+cat /etc/nginx/nginx.conf
