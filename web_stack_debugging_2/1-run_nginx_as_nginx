@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# a Bash script that configures the container to fit the above requirements
+# Run nginx as the nginx user
 
-# Update Nginx configuration to run as nginx user
-sed -i 's/user\s*root;/user nginx;/g' /etc/nginx/nginx.conf
+# Stop Apache processes
+pkill apache2
 
-# Ensure Nginx listens on all active IPs on port 8080
-sed -i 's/listen\s*\(.*\)\;$/listen 8080;/g' /etc/nginx/sites-available/default
-
-# Restart Nginx to apply changes
-service nginx restart
-
-# Check if Nginx is running as nginx user
-if pgrep -u nginx nginx &> /dev/null; then
-    echo "Nginx is running as nginx user"
-else
-    echo "Nginx is not running as nginx user"
+# If port 80 for IPv4 is being listened to, it is changed to port 8080
+if grep -q "listen 80" /etc/nginx/sites-available/default ; then
+    sed -i "s/listen 80/listen 8080/" /etc/nginx/sites-available/default
 fi
 
-# Check if Nginx is listening on port 8080
-nc -z 0 8080 && echo "Nginx is listening on port 8080" || echo "Nginx is not listening on port 8080"
+# If port 80 for IPv6 is being listened to, it is changed to port 8080
+if grep -q "listen \[::\]:80" /etc/nginx/sites-available/default ; then
+    sed -i "s/listen \[::\]:80/listen \[::\]:8080/" /etc/nginx/sites-available/default
+fi
+
+# Update Nginx settings file owner and group
+chown nginx:nginx /etc/nginx/nginx.conf
+
+# Update Nginx settings file permissions
+chmod 0644 /etc/nginx/nginx.conf
+
+# Start the nginx service as the nginx user
+su nginx -c "service nginx start"
